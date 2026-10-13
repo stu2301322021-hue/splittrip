@@ -1,4 +1,7 @@
+from splittrip.storage import initialize_database
+
 def main():
+    initialize_database()
     while True:
         print("\nSplitTrip")
         print("Планиране на пътувания и общи разходи")
