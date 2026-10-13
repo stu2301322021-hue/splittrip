@@ -85,6 +85,30 @@ WHEN NOT EXISTS (
 BEGIN
     SELECT RAISE(ABORT, 'Vote participant must belong to activity trip');
 END;
+
+CREATE TRIGGER IF NOT EXISTS expenses_same_trip_insert
+BEFORE INSERT ON expenses
+FOR EACH ROW
+WHEN NOT EXISTS (
+    SELECT 1 FROM participants
+    WHERE id = NEW.payer_id
+      AND trip_id = NEW.trip_id
+)
+BEGIN
+    SELECT RAISE(ABORT, 'Payer must belong to expense trip');
+END;
+
+CREATE TRIGGER IF NOT EXISTS expenses_same_trip_update
+BEFORE UPDATE OF trip_id, payer_id ON expenses
+FOR EACH ROW
+WHEN NOT EXISTS (
+    SELECT 1 FROM participants
+    WHERE id = NEW.payer_id
+      AND trip_id = NEW.trip_id
+)
+BEGIN
+    SELECT RAISE(ABORT, 'Payer must belong to expense trip');
+END;
 """
 
 
