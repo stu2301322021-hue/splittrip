@@ -57,6 +57,34 @@ CREATE TABLE IF NOT EXISTS settlements (
     amount_cents INTEGER NOT NULL CHECK (amount_cents > 0),
     CHECK (sender_id != receiver_id)
 );
+
+CREATE TRIGGER IF NOT EXISTS votes_same_trip_insert
+BEFORE INSERT ON votes
+FOR EACH ROW
+WHEN NOT EXISTS (
+    SELECT 1
+    FROM activities a
+    JOIN participants p ON p.trip_id = a.trip_id
+    WHERE a.id = NEW.activity_id
+      AND p.id = NEW.participant_id
+)
+BEGIN
+    SELECT RAISE(ABORT, 'Vote participant must belong to activity trip');
+END;
+
+CREATE TRIGGER IF NOT EXISTS votes_same_trip_update
+BEFORE UPDATE OF activity_id, participant_id ON votes
+FOR EACH ROW
+WHEN NOT EXISTS (
+    SELECT 1
+    FROM activities a
+    JOIN participants p ON p.trip_id = a.trip_id
+    WHERE a.id = NEW.activity_id
+      AND p.id = NEW.participant_id
+)
+BEGIN
+    SELECT RAISE(ABORT, 'Vote participant must belong to activity trip');
+END;
 """
 
 
