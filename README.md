@@ -35,6 +35,7 @@ SplitTrip е конзолно приложение за приятели, кои
 ```bash
 python app.py
 
+
 ```
 
 При Windows може да се използва и `python app.py`.
@@ -43,6 +44,7 @@ python app.py
 
 ```bash
 python -m unittest discover -s tests -v
+
 
 ```
 
@@ -80,3 +82,14 @@ Commit съобщенията и заглавията на Pull Requests съд�
 
 Добавена е началната структура и меню с изход.
 Бизнес функционалностите предстои да бъдат реализирани.
+
+## Автоматични проверки
+
+GitHub Actions изпълнява тестовете с Python 3.12 при отваряне
+или обновяване на Pull Request към main и при push към main,
+включително след merge.
+
+Workflow: .github/workflows/tests.yml
+Команда: python -m unittest discover -s tests -v
+
+При неуспешен тест проверката се показва като неуспешна в PR.
